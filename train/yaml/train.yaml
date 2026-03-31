@@ -1,0 +1,44 @@
+### 模型配置
+model_name_or_path: meta-llama/Llama-3.2-3B-Instruct
+
+overwrite_output_dir: False
+### 微調方法
+stage: sft
+do_train: true
+finetuning_type: lora
+lora_target: all
+lora_rank: 32
+lora_alpha: 16
+lora_dropout: 0.05
+
+### 数据集配置
+dataset_dir: data
+dataset: train_open_code
+template: llama3
+cutoff_len: 1100
+max_samples: 1000000
+preprocessing_num_workers: 16
+packing: false
+### 输出配置
+output_dir: save/train_open_code
+logging_steps: 5
+save_steps: 100
+plot_loss: true
+report_to: wandb
+
+### 训练参数
+per_device_train_batch_size: 12
+gradient_accumulation_steps: 4
+learning_rate: 0.00005
+num_train_epochs: 3.0
+lr_scheduler_type: cosine
+warmup_steps: 0
+max_grad_norm: 1.0
+optim: adamw_torch
+bf16: true
+ddp_timeout: 180000000
+include_num_input_tokens_seen: true
+
+### 其他配置
+flash_attn: auto
+enable_liger_kernel: true

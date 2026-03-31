@@ -1,0 +1,7 @@
+data
+datasets
+*.pt
+*.pth
+*finetuned_model
+*.pyc
+*.ipynb_checkpoints
