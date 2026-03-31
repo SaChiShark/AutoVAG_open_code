@@ -1,0 +1,3 @@
+[submodule "util/DIT"]
+	path = util/DIT
+	url = https://github.com/microsoft/unilm.git
