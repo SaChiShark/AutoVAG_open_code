@@ -102,7 +102,7 @@ def main():
 
     parser.add_argument(
         "--config-file",
-        default="/home/mvnl/AutoVAG_open_code/preprocess/AOI/object_detection/cascade/cascade_dit_base.yaml",
+        default="./cascade/cascade_dit_base.yaml",
         metavar="FILE",
         help="path to config file",
     )    
@@ -110,7 +110,7 @@ def main():
     parser.add_argument(
         "--opts",
         help="Modify config options using the command-line 'KEY VALUE' pairs",
-        default = ["MODEL.WEIGHTS",'/home/mvnl/AutoVAG_open_code/preprocess/AOI/object_detection/finetuned_DIT.pth'],
+        default = ["MODEL.WEIGHTS",'./finetuned_DIT.pth'],
         nargs=argparse.REMAINDER,
     )
 
@@ -127,8 +127,8 @@ def main():
     cfg.merge_from_list(args.opts)
     
     # Step 3: set device
-    #device = "cuda" if torch.cuda.is_available() else "cpu"
-    cfg.MODEL.DEVICE = "cuda"
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    cfg.MODEL.DEVICE = device
     
     # Step 4: define model
     #predictors = []
@@ -142,8 +142,7 @@ def main():
         md.set(thing_classes=["image","math","plot","table","text","title"])
         
     
-    #base_path = '../../../data/courses'
-    base_path = '/home/mvnl/AutoVAG_open_code/data/courses'
+    base_path = '../../../data/courses'
     #process_list = []
     queue = multiprocessing.Queue()
     event = multiprocessing.Event()
