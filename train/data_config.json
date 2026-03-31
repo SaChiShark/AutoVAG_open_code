@@ -1,0 +1,16 @@
+{
+  "train_open_code": {
+    "formatting": "sharegpt",
+    "file_name": "../datasets/train.json",
+    "columns": {
+      "messages": "conversations",
+      "system": "system"
+    },
+    "tags": {
+      "role_tag": "from",
+      "content_tag": "value",
+      "user_tag": "human",
+      "assistant_tag": "gpt"
+    }
+  }
+}
