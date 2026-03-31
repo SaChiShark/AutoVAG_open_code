@@ -16,11 +16,23 @@ Due to conflicting dependencies (Detectron2, Faster-Whisper, and Transformers), 
 | `preprocess-AOI-det` | Vision/Object Detection | `detectron2`, `torch`, `cv2` |
 | `autovag-vlm` | Image Description / Training | `transformers`, `llama-factory` |
 
+### Environment Setup: `preprocess-ASR`
+Used for video downloading and speech-to-text.
+```bash
+# 0. Create environment
+conda create -n preprocess-ASR python==3.11
+conda activate preprocess-ASR
+
+# 1. Install requirements
+cd preprocess/ASR
+pip install -r requirements.txt
+```
+
 ### Environment Setup: `preprocess-AOI-det`
 This environment requires a specific setup for **Detectron2** and **DiT**.
 ```bash
 # 0. Create environment
-conda create -n preprocess-AOI-det python==3.9
+conda create -n preprocess-AOI-det python==3.10
 conda activate preprocess-AOI-det
 
 # 1. Install PyTorch
@@ -39,17 +51,17 @@ pip install shapely
 ### Environment Setup: `autovag-vlm` (Shared with Training)
 This environment is used for scene description (Pixtral/Phi-4) and model training using **Llama-Factory**.
 ```bash
-# 0. Create environment (Python 3.10+ recommended)
-conda create -n autovag-vlm python==3.10
+# 0. Create environment
+conda create -n autovag-vlm python==3.11
 conda activate autovag-vlm
 
 # 1. Install Llama-Factory and its dependencies
 cd train/llama_factory
-pip install -e .
-pip install -r requirements/metrics.txt
-pip install -r requirements/liger-kernel.txt
-pip install -r requirements/vllm.txt
-pip install -r fp8.txt
+pip install -e . && \
+pip install -r requirements/vllm.txt && \
+pip install -r requirements/liger-kernel.txt && \
+pip install -r requirements/metrics.txt && \
+pip install -r fp8.txt && \
 pip install -r fp8-te.txt
 ```
 
@@ -57,44 +69,28 @@ pip install -r fp8-te.txt
 
 ## 📈 Pipeline: Preprocessing
 
-The preprocessing workflow is split into several steps. Note the environment required for each.
+Preprocessing is automated via a master script that handles environment switching. Use this script to run the entire flow or specific stages.
 
-### Step 1: Video Download
-**Env:** `preprocess-ASR`
-Downloads playlists and extracts audio.
+### 1. Make the script executable
 ```bash
-python preprocess/download_video.py
+chmod +x preprocess/run_pipeline.sh
 ```
 
-### Step 2: ASR (Speech to Text)
-**Env:** `preprocess-ASR`
-Transcribes audio into Traditional Chinese SRT files.
+### 2. Run the pipeline
+Available stages: `all` (default), `asr`, `det`, `vlm`, `dataset`.
+
 ```bash
-cd preprocess/ASR
-python check_srt_exist.py
-python mk_subtitle.py
-```
+# Run all stages sequentially
+./preprocess/run_pipeline.sh
 
-### Step 3: AOI Analysis (Visual)
+# Run only transcription (ASR)
+./preprocess/run_pipeline.sh asr
 
-#### 3.1 Object Detection
-**Env:** `preprocess-AOI-det`
-Extracts slides and identifies Areas of Interest (AOIs) using DiT.
-1. **Screenshot & Split**: `screenshot.py`, `slide_splitter.py`
-2. **Detection**: `object_detection/inference.py` (using DiT)
+# Run only visual analysis (AOI)
+./preprocess/run_pipeline.sh det
 
-#### 3.2 Multimodal Description
-**Env:** `autovag-vlm`
-Generates detailed textual descriptions for each detected AOI.
-- **Pixtral-12B**: Using `describe.py`
-- **Phi-4 MM**: Using `phi4/phi_4.py` or `phi4/inference.py`
-
-### Step 4: Dataset Generation
-**Env:** Base/ASR
-Synthesizes the final ShareGPT/Llama-Factory compatible dataset.
-```bash
-cd preprocess/dataset
-python make_sharegpt_dataset.py
+# Run only scene description (VLM)
+./preprocess/run_pipeline.sh vlm
 ```
 
 ---
@@ -128,5 +124,8 @@ AutoVAG_open_code/
 ---
 
 ## 📜 Acknowledgments
-- Videos sourced from **NTU Hung-yi Lee's** courses.
-- Powered by [Llama-Factory](https://github.com/hiyouga/LlamaFactory), [Faster-Whisper](https://github.com/SYSTRAN/faster-whisper), and [vLLM](https://github.com/vllm-project/vllm).
+- Lectures from **NTU Hung-yi Lee's** and **NTU Yun-Nung Chen's** courses.
+- ASR Powered by [MediaTek-Research/Breeze-ASR-25](https://huggingface.co/MediaTek-Research/Breeze-ASR-25).
+- VLM Powered by [microsoft/Phi-4-multimodal-instruct](https://huggingface.co/microsoft/Phi-4-multimodal-instruct).
+- Object Detection by [Microsoft DiT](https://github.com/microsoft/unilm/tree/master/dit).
+- Tools: [Llama-Factory](https://github.com/hiyouga/LlamaFactory), [Faster-Whisper](https://github.com/SYSTRAN/faster-whisper), [vLLM](https://github.com/vllm-project/vllm).
