@@ -102,7 +102,7 @@ def main():
 
     parser.add_argument(
         "--config-file",
-        default="./cascade/cascade_dit_base.yaml",
+        default="/home/mvnl/AutoVAG_open_code/preprocess/AOI/object_detection/cascade/cascade_dit_base.yaml",
         metavar="FILE",
         help="path to config file",
     )    
@@ -110,7 +110,7 @@ def main():
     parser.add_argument(
         "--opts",
         help="Modify config options using the command-line 'KEY VALUE' pairs",
-        default = ["MODEL.WEIGHTS",'./finetuned_DIT.pth'],
+        default = ["MODEL.WEIGHTS",'/home/mvnl/AutoVAG_open_code/preprocess/AOI/object_detection/finetuned_DIT.pth'],
         nargs=argparse.REMAINDER,
     )
 
@@ -127,8 +127,8 @@ def main():
     cfg.merge_from_list(args.opts)
     
     # Step 3: set device
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    cfg.MODEL.DEVICE = device
+    #device = "cuda" if torch.cuda.is_available() else "cpu"
+    cfg.MODEL.DEVICE = "cuda"
     
     # Step 4: define model
     #predictors = []
@@ -142,7 +142,8 @@ def main():
         md.set(thing_classes=["image","math","plot","table","text","title"])
         
     
-    base_path = '../../../data/courses'
+    #base_path = '../../../data/courses'
+    base_path = '/home/mvnl/AutoVAG_open_code/data/courses'
     #process_list = []
     queue = multiprocessing.Queue()
     event = multiprocessing.Event()
@@ -193,11 +194,10 @@ def process_output(img,output,page_path):
     cv2.imwrite(f'{page_path}/AOI.jpg', result_image)
     if args.save2json:
         save2json(output, img.shape[:2],f'{page_path}/AOI.json')
-def AOI_detect(course_path,video,split_result,model,batch_size= 7):
+def AOI_detect(course_path,video,split_result,model):
     global  md, args
     screenshot_path = f'{course_path}/screenshots/{video}'
     AOI_path = f'{course_path}/AOIs/{video}'
-    batch_input = []
     need_postprocess = []
     page_paths = []
     for key in tqdm(split_result.keys(),desc='Pages: '):
@@ -205,24 +205,11 @@ def AOI_detect(course_path,video,split_result,model,batch_size= 7):
             continue
         page_path = f'{AOI_path}/page_{key}'
         img = cv2.imread(f'{screenshot_path}/screenshot_{split_result[key]}.jpg')
-        batch_input.append(img)
         page_paths.append(page_path)
-        if len(batch_input) == batch_size:
-            # Step 5: run inference
-            with torch.no_grad():
-                outputs = model(batch_input,batch = True)
-            for img,output,page_path in zip(batch_input,outputs,page_paths):
-                need_postprocess.append([img,output['instances'].to('cpu'),page_path])
-                #process_output(img,output['instances'].to('cpu'),page_path)
-            batch_input = []
-            page_paths = []
-    if len(batch_input) != 0:
         # Step 5: run inference
         with torch.no_grad():
-            outputs = model(batch_input,batch = True)
-        for img,output,page_path in zip(batch_input,outputs,page_paths):
-            #process_output(img,output['instances'].to('cpu'),page_path)
-            need_postprocess.append([img,output['instances'].to('cpu'),page_path])
+            output = model(img)
+        need_postprocess.append([img,output['instances'].to('cpu'),page_path])
     return need_postprocess
 
 def save2json(predictions,img_shape,output_file_name):

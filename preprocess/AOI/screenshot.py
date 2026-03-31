@@ -69,7 +69,6 @@ def process_video_task(task):
 
 if __name__ == '__main__':
     BASE_DIR = '../../data/courses'
-    
     tasks = []
     for course in sorted(os.listdir(BASE_DIR)):
         course_path = os.path.join(BASE_DIR, course)

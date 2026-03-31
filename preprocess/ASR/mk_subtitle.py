@@ -52,7 +52,8 @@ if __name__ == "__main__":
         try:
             course_id, video_id, audio_name = row[0], row[1], row[2]
             audio_path = os.path.join(BASE_DIR, course_id, 'audios', audio_name.split('.')[0] + '.mp3')
-            output_path = os.path.join(BASE_DIR, course_id, 'srts_', f'{video_id}_normal_whisper.srt')
+            video_id = video_id.replace('.mp4','')
+            output_path = os.path.join(BASE_DIR, course_id, 'srts', f'{video_id}.srt')
 
             segments, info = model.transcribe(
                 audio_path, 
