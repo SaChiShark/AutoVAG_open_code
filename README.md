@@ -14,7 +14,8 @@ Due to conflicting dependencies (Detectron2, Faster-Whisper, and Transformers), 
 | :--- | :--- | :--- |
 | `preprocess-ASR` | Downloading & Transcription | `pytubefix`, `faster-whisper` |
 | `preprocess-AOI-det` | Vision/Object Detection | `detectron2`, `torch`, `cv2` |
-| `autovag-vlm` | Image Description / Training | `transformers`, `llama-factory` |
+| `preprocess-VLM` | Image Description | `transformers`, `phi-4` |
+| `autovag-train` | Model Training / Evaluation | `llama-factory`, `vllm` |
 
 ### Environment Setup: `preprocess-ASR`
 Used for video downloading and speech-to-text.
@@ -48,12 +49,27 @@ pip install --no-build-isolation 'git+https://github.com/facebookresearch/detect
 pip install shapely
 ```
 
-### Environment Setup: `autovag-vlm` (Shared with Training)
-This environment is used for scene description (Pixtral/Phi-4) and model training using **Llama-Factory**.
+### Environment Setup: `preprocess-VLM`
+Used for scene description using **Phi-4 MM** or **Pixtral-12B**.
 ```bash
 # 0. Create environment
-conda create -n autovag-vlm python==3.11
-conda activate autovag-vlm
+conda create -n preprocess-VLM python==3.11
+conda activate preprocess-VLM
+
+# 1. Install requirements
+cd preprocess/AOI/phi4
+pip install -r requirements.txt
+
+# 2. (Optional) Install Flash-Attention for better performance
+pip install flash-attn --no-build-isolation
+```
+
+### Environment Setup: `autovag-train` (Llama-Factory)
+This environment is used for model training and **vLLM** evaluation.
+```bash
+# 0. Create environment
+conda create -n autovag-train python==3.11
+conda activate autovag-train
 
 # 1. Install Llama-Factory and its dependencies
 cd train/llama_factory

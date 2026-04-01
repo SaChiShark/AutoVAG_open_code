@@ -6,7 +6,7 @@
 # --- Configuration ---
 ENV_ASR="preprocess-ASR"
 ENV_DET="preprocess-AOI-det"
-ENV_VLM="autovag-vlm"
+ENV_VLM="preprocess-VLM"
 
 # Function to run a command in a specific conda environment
 run_in_env() {

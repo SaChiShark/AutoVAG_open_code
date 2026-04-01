@@ -7,9 +7,9 @@ from transformers import BitsAndBytesConfig
 import tqdm
 # Load the multimodal Pixtral-12B model
 model_id = "mistral-community/pixtral-12b"
-quantization_config = BitsAndBytesConfig(
-    load_in_8bit=True
-)
+#quantization_config = BitsAndBytesConfig(
+#    load_in_8bit=True
+#)
 
 #quantization_config = BitsAndBytesConfig(
 #    load_in_4bit=True,
@@ -24,8 +24,8 @@ model = LlavaForConditionalGeneration.from_pretrained(
     model_id,
     torch_dtype=torch.float16,
     device_map="cuda",
-    quantization_config=quantization_config,
-    attn_implementation={"text_config": "flash_attention_2", "vision_config": "eager"}
+    #quantization_config=quantization_config,
+    attn_implementation={"text_config": "eager", "vision_config": "eager"}
 )
 
 processor = AutoProcessor.from_pretrained(model_id)

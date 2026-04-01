@@ -17,8 +17,7 @@ print(processor.tokenizer)
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
     trust_remote_code=True,
-    torch_dtype='auto',
-    _attn_implementation='flash_attention_2',
+    torch_dtype='auto'
 ).cuda()
 print("model.config._attn_implementation:", model.config._attn_implementation)
 
