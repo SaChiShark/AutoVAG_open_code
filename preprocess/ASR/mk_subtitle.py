@@ -7,8 +7,8 @@ BASE_DIR = '../../data/courses'
 MODEL_SIZE = "SoybeanMilk/faster-whisper-Breeze-ASR-25"
 DEVICE = "cuda"
 COMPUTE_TYPE = "float16" 
-NUM_WORKERS = 4        
-
+NUM_WORKERS = 16
+BEAM_SIZE = 5
 def format_timestamp(seconds):
     millisec = int((seconds - int(seconds)) * 1000)
     hours = int(seconds // 3600)
@@ -31,12 +31,11 @@ if __name__ == "__main__":
     # cpu_threads 指定用於音檔解碼的 CPU 核心數
     print(f"正在載入 Faster-Whisper 模型: {MODEL_SIZE}...")
     model = WhisperModel(
-        MODEL_SIZE, 
+        MODEL_SIZE,
         device=DEVICE, 
         compute_type=COMPUTE_TYPE,
         num_workers=NUM_WORKERS
     )
-
     # 2. 讀取任務清單
     tasks = []
     with open("missing_srt.csv", mode="r", encoding="utf-8") as file:
@@ -57,7 +56,8 @@ if __name__ == "__main__":
 
             segments, info = model.transcribe(
                 audio_path, 
-                beam_size=5,
+                log_progress = True,
+                beam_size=BEAM_SIZE,
                 initial_prompt="這是一個課程影片。請用繁體回應",
                 vad_filter=False
             )

@@ -9,3 +9,4 @@ preprocess/ASR/missing_srt.csv
 preprocess/AOI/object_detection/environment.yml
 */wandb
 */save
+preprocess/ASR/missing_srt.csv

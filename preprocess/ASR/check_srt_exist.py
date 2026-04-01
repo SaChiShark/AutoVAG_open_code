@@ -13,8 +13,8 @@ for course in os.listdir(base_dir):
     srts = os.listdir(f'{base_dir}/{course}/srts')
     for video in os.listdir(f'{base_dir}/{course}/videoes'):
         count += 1
-        video_id = video.split('_')[0]
-        if  not f'{video_id}_Original.srt' in srts and not f'{video_id}_normal_whisper.srt' in srts:
+        video_id = video.split('.')[0]
+        if  not f'{video_id}.srt' in srts:
             missing_count += 1
             missing.append([course,video_id,video])
             

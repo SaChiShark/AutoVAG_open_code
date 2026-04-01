@@ -27,5 +27,7 @@ for playlist in playlists:
     os.makedirs(f'{base_dir}/{name}/audios',exist_ok=True)
     for video in tqdm.tqdm(p.videos):
             safe_title = video.title.replace('|', '').replace('/', '').replace('\\', '').replace('.', '').replace(':', '')
+            if 'QA' in safe_title or 'TA' in safe_title or 'Homework' in safe_title or '助教' in safe_title or 'Guest' in safe_title:
+                continue
             video.streams.get_highest_resolution(progressive=False).download(output_path = f'{base_dir}/{name}/videoes',filename=f'{safe_title}.mp4')
             audio_stream = video.streams.filter(only_audio=True).order_by('abr').desc().first().download(output_path = f'{base_dir}/{name}/audios', filename=f'{safe_title}.mp3')

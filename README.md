@@ -47,6 +47,7 @@ pip install -r requirements.txt
 pip install --no-build-isolation 'git+https://github.com/facebookresearch/detectron2.git'
 # 4. Install additional dependencies
 pip install shapely
+pip install psutil
 ```
 
 ### Environment Setup: `preprocess-VLM`

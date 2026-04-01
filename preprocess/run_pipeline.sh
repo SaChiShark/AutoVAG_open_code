@@ -31,7 +31,7 @@ echo "🌟 Starting AutoVAG Preprocessing Pipeline [Stage: $STAGE]"
 # --- Stage 1: Download & ASR ---
 if [[ "$STAGE" == "all" || "$STAGE" == "asr" ]]; then
     echo "🎬 Stage 1: Download & ASR"
-    run_in_env "$ENV_ASR" python download_video.py
+    #run_in_env "$ENV_ASR" python download_video.py
     
     cd ASR
     run_in_env "$ENV_ASR" python check_srt_exist.py
@@ -65,7 +65,6 @@ if [[ "$STAGE" == "all" || "$STAGE" == "dataset" ]]; then
     echo "📊 Stage 4: Dataset Synthesis"
     cd dataset
     run_in_env "$ENV_ASR" python make_base_dataset.py
-    run_in_env "$ENV_ASR" python split_dataset.py
     run_in_env "$ENV_ASR" python detect_laser.py
     run_in_env "$ENV_ASR" python find_laser_coresponse_AOI.py
     run_in_env "$ENV_ASR" python make_sharegpt_dataset.py
