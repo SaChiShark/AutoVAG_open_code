@@ -10,12 +10,12 @@ Due to conflicting dependencies (Detectron2, Faster-Whisper, and Transformers), 
 
 ### 1. Preprocessing Environments
 
-| Name | Usage | Key Packages |
-| :--- | :--- | :--- |
-| `preprocess-ASR` | Downloading & Transcription | `pytubefix`, `faster-whisper` |
-| `preprocess-AOI-det` | Vision/Object Detection | `detectron2`, `torch`, `cv2` |
-| `preprocess-VLM` | Image Description | `transformers`, `phi-4` |
-| `autovag-train` | Model Training / Evaluation | `llama-factory`, `vllm` |
+| Name | Usage | 
+| :--- | :--- | 
+| `preprocess-ASR` | Downloading & Transcription |
+| `preprocess-AOI-det` | Vision/Object Detection |
+| `preprocess-VLM` | Image Description |
+| `autovag-train` | Model Training / Evaluation |
 
 ### Environment Setup: `preprocess-ASR`
 Used for video downloading and speech-to-text.
@@ -60,9 +60,6 @@ conda activate preprocess-VLM
 # 1. Install requirements
 cd preprocess/AOI/phi4
 pip install -r requirements.txt
-
-# 2. (Optional) Install Flash-Attention for better performance
-pip install flash-attn --no-build-isolation
 ```
 
 ### Environment Setup: `autovag-train` (Llama-Factory)
@@ -80,6 +77,7 @@ pip install -r requirements/liger-kernel.txt && \
 pip install -r requirements/metrics.txt && \
 pip install -r fp8.txt && \
 pip install -r fp8-te.txt
+pip install wandb
 ```
 
 ---

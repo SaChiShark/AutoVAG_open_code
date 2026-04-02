@@ -53,10 +53,10 @@ setting = {
 }
 count = 0
 token_counts = 0
-for course_count,course in enumerate(os.listdir(f'{base_path}/datasets/base_dataset')):
-    for video in tqdm.tqdm(os.listdir(f'{base_path}/datasets/base_dataset/{course}')):
+for course_count,course in enumerate(os.listdir(f'{base_path}/datasets/opencode/base_dataset')):
+    for video in tqdm.tqdm(os.listdir(f'{base_path}/datasets/opencode/base_dataset/{course}')):
         video = video.replace('.json','')
-        with open(f'{base_path}/datasets/base_dataset/{course}/{video}.json',encoding='utf-8') as f:
+        with open(f'{base_path}/datasets/opencode/base_dataset/{course}/{video}.json',encoding='utf-8') as f:
             dataset = json.load(f)
             
         for context in dataset['context_list']:
@@ -94,7 +94,7 @@ for course_count,course in enumerate(os.listdir(f'{base_path}/datasets/base_data
                     valid.append(line)
                 else:
                     train.append(line)
-with open(f'{base_path}/datasets/train.json','w',encoding='utf-8') as f:
+with open(f'{base_path}/datasets/opencode/train.json','w',encoding='utf-8') as f:
     json.dump(train,f,ensure_ascii=False,indent=2)
-with open(f'{base_path}/datasets/valid.json','w',encoding='utf-8') as f:
+with open(f'{base_path}/datasets/opencode/valid.json','w',encoding='utf-8') as f:
     json.dump(valid,f,ensure_ascii=False,indent=2)

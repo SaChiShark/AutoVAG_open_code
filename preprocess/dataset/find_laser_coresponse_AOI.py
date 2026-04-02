@@ -34,7 +34,7 @@ def read_AOIs(page,course,video):
         AOIs = json.load(f)['AOI']
     return AOIs
 base_path = '../..'
-dataset_path = f'{base_path}/datasets/base_dataset'
+dataset_path = f'{base_path}/datasets/opencode/base_dataset'
 
 for course in tqdm.tqdm(os.listdir(dataset_path),desc='Course'):
     course_path = f'{dataset_path}/{course}'

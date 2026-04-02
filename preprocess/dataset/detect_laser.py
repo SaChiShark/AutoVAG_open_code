@@ -23,8 +23,8 @@ def load_image(screenshot_path):
         return cv2.imread(screenshot_path)
     return None
 # 遍历数据集
-for course in tqdm.tqdm(os.listdir(f'{base_path}/datasets/base_dataset'), desc='Course'):
-    dataset_path = f'{base_path}/datasets/base_dataset/{course}'
+for course in tqdm.tqdm(os.listdir(f'{base_path}/datasets/opencode/base_dataset'), desc='Course'):
+    dataset_path = f'{base_path}/datasets/opencode/base_dataset/{course}'
     for video in tqdm.tqdm(os.listdir(dataset_path), desc='Video'):
         with open(f'{dataset_path}/{video}', 'r', encoding='utf-8') as f:
             dataset = json.load(f)

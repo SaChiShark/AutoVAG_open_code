@@ -12,3 +12,4 @@ preprocess/AOI/object_detection/environment.yml
 preprocess/ASR/missing_srt.csv
 dc_notify.sh
 *.log
+*llamaboard_cache

@@ -127,11 +127,11 @@ if __name__ == "__main__":
             dataset[course][video] = result
 
     # 寫入 JSON 文件
-    os.makedirs('../../datasets', exist_ok=True)
-    os.makedirs('../../datasets/base_dataset', exist_ok=True)
+    os.makedirs('../../datasets/opencode', exist_ok=True)
+    os.makedirs('../../datasets/opencode/base_dataset', exist_ok=True)
     for course in tqdm.tqdm(dataset.keys()):
         for video in tqdm.tqdm(dataset[course].keys()):
-            os.makedirs(f'../../datasets//base_dataset/{course}/',exist_ok=True)
+            os.makedirs(f'../../datasets/opencode/base_dataset/{course}/',exist_ok=True)
             #if not os.path.exists(f'/home/mvnl/code/cool/dataset/base_dataset/{course}/{video}.json'):
-            with open(f'../../datasets//base_dataset/{course}/{video}.json', 'w', encoding='utf-8') as f:
+            with open(f'../../datasets/opencode/base_dataset/{course}/{video}.json', 'w', encoding='utf-8') as f:
                 json.dump(dataset[course][video],f,indent=4,ensure_ascii=False)
