@@ -114,7 +114,19 @@ Available stages: `all` (default), `asr`, `det`, `vlm`, `dataset`.
 
 ## 🚀 Training
 
-Details for fine-tuning via **Llama-Factory** go here.
+Once the preprocessing is complete and the dataset is generated, you can start model training using **Llama-Factory**.
+
+### Run Training
+```bash
+# 1. Activate the training environment
+conda activate autovag-train
+
+# 2. Navigate to the train directory
+cd train
+
+# 3. Start training using the provided config
+llamafactory-cli train yaml/train.yaml
+```
 
 ---
 
@@ -144,5 +156,6 @@ AutoVAG_open_code/
 - Lectures from **NTU Hung-yi Lee's** and **NTU Yun-Nung Chen's** courses.
 - ASR Powered by [MediaTek-Research/Breeze-ASR-25](https://huggingface.co/MediaTek-Research/Breeze-ASR-25).
 - VLM Powered by [microsoft/Phi-4-multimodal-instruct](https://huggingface.co/microsoft/Phi-4-multimodal-instruct).
+- LLM Powered by [meta-llama/Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct).
 - Object Detection by [Microsoft DiT](https://github.com/microsoft/unilm/tree/master/dit).
 - Tools: [Llama-Factory](https://github.com/hiyouga/LlamaFactory), [Faster-Whisper](https://github.com/SYSTRAN/faster-whisper), [vLLM](https://github.com/vllm-project/vllm).

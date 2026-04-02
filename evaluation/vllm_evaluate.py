@@ -38,14 +38,13 @@ def translation(questions):
             }
         ]
     for question in questions:
-        if question['aoi_count'] == 1:
-            continue
-        message = format_message(question['conversations'][0]['value'])
-        prompt = tokenizer.apply_chat_template(message, add_generation_prompt=True, tokenize=False)
-        prompts.append(prompt)
-        anses.append(question['conversations'][1]['value'])
-        courses.append(question['course'])
-        aoi_counts.append(question['aoi_count'])
+        if question['aoi_count'] > 1:
+            message = format_message(question['conversations'][0]['value'])
+            prompt = tokenizer.apply_chat_template(message, add_generation_prompt=True, tokenize=False)
+            prompts.append(prompt)
+            anses.append(question['conversations'][1]['value'])
+            courses.append(question['course'])
+            aoi_counts.append(question['aoi_count'])
     sampling_params = SamplingParams(temperature=0.6, top_p=0.9, max_tokens=4000)
     if lora_path is None:
         outputs = model.generate(prompts, sampling_params)
@@ -71,9 +70,9 @@ def translation(questions):
 
 generated_texts,question_counts,correct_counts = translation(valid_dataset)
 valid_dataset_name = valid_data_path.split('/')[-1].replace('.json','')
-with open(f'evaluation/eval_result/{lora_name}_{valid_dataset_name}_prdict_result.json', 'w') as f:
+with open(f'eval_result/{lora_name}_{valid_dataset_name}_prdict_result.json', 'w') as f:
     json.dump(generated_texts,f)
-with open(f'evaluation/eval_result/{lora_name}_{valid_dataset_name}.csv', 'w', newline='') as csvfile:
+with open(f'eval_result/{lora_name}_{valid_dataset_name}.csv', 'w', newline='') as csvfile:
     # 建立 CSV 檔寫入器
     writer = csv.writer(csvfile)
 
@@ -82,7 +81,7 @@ with open(f'evaluation/eval_result/{lora_name}_{valid_dataset_name}.csv', 'w', n
     for key in question_counts.keys():
         writer.writerow([key] + [question_count for question_count in question_counts[key]] + [correct_count for correct_count in correct_counts[key]])
       
-with open('evaluation/eval_result/evaluation_summary.csv', 'a', newline='') as csvfile:
+with open('eval_result/evaluation_summary.csv', 'a', newline='') as csvfile:
     # 建立 CSV 檔寫入器
     writer = csv.writer(csvfile)
     # 寫入一列資料
