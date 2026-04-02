@@ -12,10 +12,10 @@ lora_alpha: 16
 lora_dropout: 0.05
 
 ### 数据集配置
-dataset_dir: data
+dataset_dir: .
 dataset: train_open_code
 template: llama3
-cutoff_len: 1100
+cutoff_len: 1200
 max_samples: 1000000
 preprocessing_num_workers: 16
 packing: false
@@ -27,8 +27,8 @@ plot_loss: true
 report_to: wandb
 
 ### 训练参数
-per_device_train_batch_size: 12
-gradient_accumulation_steps: 4
+per_device_train_batch_size: 32
+gradient_accumulation_steps: 2
 learning_rate: 0.00005
 num_train_epochs: 3.0
 lr_scheduler_type: cosine

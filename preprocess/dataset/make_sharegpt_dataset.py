@@ -80,10 +80,7 @@ for course_count,course in enumerate(os.listdir(f'{base_path}/datasets/base_data
                     aoi_describe = json.load(f)[key]
                     aoi_describe = aoi_describe.replace('Describe :','')
                     aoi_describe_page = int(aoi_describe_path.split('.')[0])
-                    if not '0.json' in os.listdir(descibe_path):
-                        aoi_describes[aoi_describe_page - 1] = aoi_describe
-                    else:
-                        aoi_describes[aoi_describe_page] = aoi_describe
+                    aoi_describes[aoi_describe_page] = aoi_describe
             ans_text = aoi_describes[context['ans']]
             if not (course in setting['valid']):
                 random.shuffle(aoi_describes)
@@ -91,11 +88,12 @@ for course_count,course in enumerate(os.listdir(f'{base_path}/datasets/base_data
             
             human = make_human(subtitle,aoi_describes)
             count += 1
-            line = make_line(human,ans,course,video,len(aoi_describes))
-            if course in setting['valid']:
-                valid.append(line)
-            else:
-                train.append(line)
+            if len(aoi_describes) > 1:
+                line = make_line(human,ans,course,video,len(aoi_describes))
+                if course in setting['valid']:
+                    valid.append(line)
+                else:
+                    train.append(line)
 with open(f'{base_path}/datasets/train.json','w',encoding='utf-8') as f:
     json.dump(train,f,ensure_ascii=False,indent=2)
 with open(f'{base_path}/datasets/valid.json','w',encoding='utf-8') as f:

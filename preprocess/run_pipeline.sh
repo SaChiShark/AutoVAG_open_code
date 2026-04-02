@@ -31,7 +31,7 @@ echo "🌟 Starting AutoVAG Preprocessing Pipeline [Stage: $STAGE]"
 # --- Stage 1: Download & ASR ---
 if [[ "$STAGE" == "all" || "$STAGE" == "asr" ]]; then
     echo "🎬 Stage 1: Download & ASR"
-    #run_in_env "$ENV_ASR" python download_video.py
+    run_in_env "$ENV_ASR" python download_video.py
     
     cd ASR
     run_in_env "$ENV_ASR" python check_srt_exist.py
@@ -50,6 +50,7 @@ if [[ "$STAGE" == "all" || "$STAGE" == "det" ]]; then
     cd object_detection
     run_in_env "$ENV_DET" python inference.py
     cd ../
+    run_in_env "$ENV_DET" python copy_screen2original_page_image.py
 fi
 
 # --- Stage 3: VLM Description ---
@@ -64,10 +65,10 @@ fi
 if [[ "$STAGE" == "all" || "$STAGE" == "dataset" ]]; then
     echo "📊 Stage 4: Dataset Synthesis"
     cd dataset
-    run_in_env "$ENV_ASR" python make_base_dataset.py
-    run_in_env "$ENV_ASR" python detect_laser.py
-    run_in_env "$ENV_ASR" python find_laser_coresponse_AOI.py
-    run_in_env "$ENV_ASR" python make_sharegpt_dataset.py
+    run_in_env "$ENV_VLM" python make_base_dataset.py
+    run_in_env "$ENV_VLM" python detect_laser.py
+    run_in_env "$ENV_VLM" python find_laser_coresponse_AOI.py
+    run_in_env "$ENV_VLM" python make_sharegpt_dataset.py
     cd ../..
 fi
 
