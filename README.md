@@ -2,6 +2,38 @@
 
 AutoVAG is a comprehensive pipeline for extracting knowledge from educational videos (e.g., YouTube lectures) to train and evaluate multi-modal Large Language Models.
 
+![AutoVAG Flow Chart](flow_chart.png)
+
+---
+
+## 🧩 Methodology & Key Features
+
+AutoVAG reframes cross-modal grounding as a **text-to-text reasoning task**, utilizing a "Divide-and-Conquer" strategy to handle complex, text-rich educational slides.
+
+### The Three-Stage Pipeline
+1.  **AOI Segmentation**: Decomposes a slide image into granular **Areas of Interest (AOIs)** using a Document Image Transformer (DiT).
+2.  **Semantic Description**: Uses a Vision-Language Model (VLM) to generate rich, context-aware textual descriptions for each AOI.
+3.  **LLM Alignment**: Formulates AOI selection as a Multiple-Choice Question (MCQ) task, allowing an LLM to reason and match subtitles to the most relevant AOI description.
+
+---
+
+## 📈 Benchmarks
+
+The following results are from the original research paper. AutoVAG demonstrates significant improvements over baseline methods by leveraging rich textual descriptions and the reasoning capabilities of Large Language Models.
+
+| Method | Paradigm | Top-1 Accuracy (EECS-Mandarin) |
+| :--- | :--- | :---: |
+| PolyViLT | Multi-modal Retrieval | 33.3% |
+| Contrastive Learning | Text-to-Text (CLIP-based) | 44.7% |
+| VLM-based Visual Grounding | End-to-end VLM (Qwen2.5-VL-3B) | 37.0% |
+| VLM-based AOI Selection | Multimodal MCQ (Qwen2.5-VL-3B) | 32.2% |
+| **AutoVAG (Ours)** | **LLM-based MCQ (Llama-3.2-3B)** | **52.3%** |
+
+### 💡 Key Advantage: Explainability
+Unlike traditional contrastive or VLM-based models, the LLM-based architecture provides **human-readable rationales** for its predictions. By leveraging the reasoning capabilities of the LLM, AutoVAG can explain *why* a specific AOI was selected for a given subtitle, significantly enhancing transparency and trust in educational settings.
+
+> **Note on Training Data**: The results reported above were achieved using a large-scale, non-public research dataset comprising 37 EECS courses (~479,000 pairs). This repository provides the complete framework and tools to replicate this pipeline and achieve high performance on your own custom datasets.
+
 ---
 
 ## 🛠 Environments & Installation
@@ -130,7 +162,59 @@ llamafactory-cli train yaml/train.yaml
 
 ## 📊 Evaluation
 
-Details for inference via **vLLM** go here.
+The evaluation pipeline uses **vLLM** for high-throughput inference to calculate accuracy metrics for subtitle-to-AOI matching.
+
+### How to Use
+
+1. **Activate Environment**
+   ```bash
+   conda activate autovag-train
+   # Basic Usage (Base Model)
+   python evaluation/vllm_evaluate.py --valid_dataset datasets/val_data.json
+
+   # Evaluate Fine-tuned Model
+   python evaluation/vllm_evaluate.py \
+       --valid_dataset datasets/val_data.json \
+       --lora_path train/save/train_open_code
+   ```
+
+   **Parameters:**
+   - `--valid_dataset`: Path to your validation JSON file.
+   - `--lora_path`: Path to the LoRA adapter directory. If not provided, it defaults to evaluating the base Llama-3.2-3B model.
+
+3. **Output Files**
+   Evaluation results are automatically saved to the `eval_result/` folder:
+   - `[lora_name]_[dataset].csv`: A detailed CSV containing question counts and correctness grouped by course and difficulty (number of candidates).
+   - `evaluation_summary.csv`: A cumulative log of evaluation runs for easy comparison.
+
+
+
+---
+
+## 📂 Dataset Format
+
+The pipeline generates training data in a standard instruction-following format:
+
+```json
+[
+  {
+    "course": "Linear Algebra",
+    "aoi_count": 3,
+    "conversations": [
+      {
+        "role": "user",
+        "content": "Analyze the following subtitle and select the most relevant visual description..."
+      },
+      {
+        "role": "assistant",
+        "content": "2"
+      }
+    ]
+  }
+]
+```
+
+
 
 ---
 
@@ -157,3 +241,8 @@ AutoVAG_open_code/
 - LLM Powered by [meta-llama/Llama-3.2-3B-Instruct](https://huggingface.co/meta-llama/Llama-3.2-3B-Instruct).
 - Object Detection by [Microsoft DiT](https://github.com/microsoft/unilm/tree/master/dit).
 - Tools: [Llama-Factory](https://github.com/hiyouga/LlamaFactory), [Faster-Whisper](https://github.com/SYSTRAN/faster-whisper), [vLLM](https://github.com/vllm-project/vllm).
+
+---
+
+
+
